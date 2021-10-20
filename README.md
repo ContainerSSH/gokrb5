@@ -1,13 +1,20 @@
-# gokrb5
+[![ContainerSSH - Launch Containers on Demand](https://containerssh.github.io/images/logo-for-embedding.svg)](https://containerssh.github.io/)
 
-It is recommended to use the latest version: [![Version](https://img.shields.io/github/release/jcmturner/gokrb5.svg)](https://github.com/jcmturner/gokrb5/releases)
+<!--suppress HtmlDeprecatedAttribute -->
+<h1 align="center">ContainerSSH gokrb5 fork</h1>
+
+<p align="center"><strong>⚠⚠⚠ This is a fork of <a href="https://github.com/jcmturner/gokrb5">gokrb5</a></strong>, an excellent Kerberos implementation in Golang. We are maintaining it exclusively for the use in <a href="https://containerssh.io/">ContainerSSH</a> so we can add changes we need quickly. <strong>Please do not use this fork outside of ContainerSSH.</strong></p>
+
+---
+
+It is recommended to use the latest version: [![Version](https://img.shields.io/github/release/containerssh/gokrb5.svg)](https://github.com/containerssh/gokrb5/releases)
 
 Development will be focused on the latest major version. New features will only be targeted at this version.
 
 | Versions | Dependency Management | Import Path | Usage | Godoc | Go Report Card |
 |----------|-----------------------|-------------|-------|-------|----------------|
-| [![v8](https://github.com/jcmturner/gokrb5/workflows/v8/badge.svg)](https://github.com/jcmturner/gokrb5/actions?query=workflow%3Av8) | Go modules | import "github.com/jcmturner/gokrb5/v8/{sub-package}" | [![Usage](https://img.shields.io/badge/v8-usage-blue)](https://github.com/jcmturner/gokrb5/blob/master/v8/USAGE.md) | [![GoDoc](https://img.shields.io/badge/godoc-reference-blue)](https://pkg.go.dev/github.com/jcmturner/gokrb5/v8) | [![Go Report Card](https://goreportcard.com/badge/github.com/jcmturner/gokrb5/v8)](https://goreportcard.com/report/github.com/jcmturner/gokrb5/v8) |
-| [![v7](https://github.com/jcmturner/gokrb5/workflows/v7/badge.svg)](https://github.com/jcmturner/gokrb5/actions?query=workflow%3Av7) | gopkg.in | import "gopkg.in/jcmturner/gokrb5.v7/{sub-package}" | [![Usage](https://img.shields.io/badge/v7-usage-blue)](https://github.com/jcmturner/gokrb5/blob/master/USAGE.md) | [![GoDoc](https://img.shields.io/badge/godoc-reference-blue)](https://pkg.go.dev/github.com/jcmturner/gokrb5@v7.5.0+incompatible) | [![Go Report Card](https://goreportcard.com/badge/gopkg.in/jcmturner/gokrb5.v7)](https://goreportcard.com/report/gopkg.in/jcmturner/gokrb5.v7) |
+| [![v8](https://github.com/jcmturner/gokrb5/workflows/v8/badge.svg)](https://github.com/jcmturner/gokrb5/actions?query=workflow%3Av8) | Go modules | import "github.com/containerssh/gokrb5/v8/{sub-package}" | [![Usage](https://img.shields.io/badge/v8-usage-blue)](https://github.com/containerssh/gokrb5/blob/master/v8/USAGE.md) | [![GoDoc](https://img.shields.io/badge/godoc-reference-blue)](https://pkg.go.dev/github.com/containerssh/gokrb5/v8) | [![Go Report Card](https://goreportcard.com/badge/github.com/containerssh/gokrb5/v8)](https://goreportcard.com/report/github.com/containerssh/gokrb5/v8) |
+| [![v7](https://github.com/containerssh/gokrb5/workflows/v7/badge.svg)](https://github.com/containerssh/gokrb5/actions?query=workflow%3Av7) | gopkg.in | import "gopkg.in/containerssh/gokrb5.v7/{sub-package}" | [![Usage](https://img.shields.io/badge/v7-usage-blue)](https://github.com/containerssh/gokrb5/blob/master/USAGE.md) | [![GoDoc](https://img.shields.io/badge/godoc-reference-blue)](https://pkg.go.dev/github.com/containerssh/gokrb5@v7.5.0+incompatible) | [![Go Report Card](https://goreportcard.com/badge/gopkg.in/containerssh/gokrb5.v7)](https://goreportcard.com/report/gopkg.in/containerssh/gokrb5.v7) |
 
 
 #### Go Version Support

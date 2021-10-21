@@ -15,6 +15,16 @@ import (
 	"github.com/jcmturner/gokrb5/v8/iana/asnAppTag"
 )
 
+// RFC 4121 Section 4.1.1.1
+const (
+	Flag_Deleg    = 1
+	Flag_Mutual   = 2
+	Flag_Replay   = 4
+	Flag_Sequence = 8
+	Flag_Conf     = 16
+	Flag_Integ    = 32
+)
+
 // Authenticator - A record containing information that can be shown to have been recently generated using the session
 // key known only by the client and server.
 // https://tools.ietf.org/html/rfc4120#section-5.5.1
@@ -76,6 +86,10 @@ func (a *Authenticator) GenerateSeqNumberAndSubKey(keyType int32, keySize int) e
 	return nil
 }
 
+func (a *Authenticator) HasCredDelegation() bool {
+	return a.Delegation.Flags&Flag_Deleg != 0
+}
+
 // Unmarshal bytes into the Authenticator.
 func (a *Authenticator) Unmarshal(b []byte) error {
 	_, err := asn1.UnmarshalWithParams(b, a, fmt.Sprintf("application,explicit,tag:%v", asnAppTag.Authenticator))
@@ -95,7 +109,7 @@ func (a *Authenticator) Marshal() ([]byte, error) {
 	return b, nil
 }
 
-func (c* CredDelegation) Unmarshal(b []byte) error {
+func (c *CredDelegation) Unmarshal(b []byte) error {
 	c.BndLength = binary.LittleEndian.Uint32(b[0:4])
 	if c.BndLength != 16 {
 		return fmt.Errorf("Invalid BndLength")

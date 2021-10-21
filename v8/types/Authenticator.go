@@ -7,6 +7,7 @@ import (
 	"math"
 	"math/big"
 	"time"
+	"encoding/binary"
 
 	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/jcmturner/gokrb5/v8/asn1tools"
@@ -27,6 +28,17 @@ type Authenticator struct {
 	SubKey            EncryptionKey     `asn1:"explicit,optional,tag:6"`
 	SeqNumber         int64             `asn1:"explicit,optional,tag:7"`
 	AuthorizationData AuthorizationData `asn1:"explicit,optional,tag:8"`
+	Delegation        CredDelegation     `asn1:"optional"`
+}
+
+// RFC1964 Section 1.1
+type CredDelegation struct {
+	BndLength    uint32
+	Bnd          []byte
+	Flags        uint32
+	DelegOption  uint16
+	DelegLength  uint16
+	Deleg        []byte
 }
 
 // NewAuthenticator creates a new Authenticator.
@@ -67,6 +79,9 @@ func (a *Authenticator) GenerateSeqNumberAndSubKey(keyType int32, keySize int) e
 // Unmarshal bytes into the Authenticator.
 func (a *Authenticator) Unmarshal(b []byte) error {
 	_, err := asn1.UnmarshalWithParams(b, a, fmt.Sprintf("application,explicit,tag:%v", asnAppTag.Authenticator))
+	if a.Cksum.CksumType == 0x8003 {
+		a.Delegation.Unmarshal(a.Cksum.Checksum)
+	}
 	return err
 }
 
@@ -78,4 +93,23 @@ func (a *Authenticator) Marshal() ([]byte, error) {
 	}
 	b = asn1tools.AddASNAppTag(b, asnAppTag.Authenticator)
 	return b, nil
+}
+
+func (c* CredDelegation) Unmarshal(b []byte) error {
+	c.BndLength = binary.LittleEndian.Uint32(b[0:4])
+	if c.BndLength != 16 {
+		return fmt.Errorf("Invalid BndLength")
+	}
+	c.Bnd = b[4:20]
+	c.Flags = binary.LittleEndian.Uint32(b[20:24])
+	if len(b) <= 24 {
+		// No delegation to use, but valid otherwise
+		return nil
+	}
+
+	c.DelegOption = binary.LittleEndian.Uint16(b[24:26])
+	c.DelegLength = binary.LittleEndian.Uint16(b[26:28])
+	c.Deleg = b[28:c.DelegLength+28]
+
+	return nil
 }

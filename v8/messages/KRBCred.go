@@ -11,6 +11,7 @@ import (
 	"github.com/jcmturner/gokrb5/v8/iana/msgtype"
 	"github.com/jcmturner/gokrb5/v8/krberror"
 	"github.com/jcmturner/gokrb5/v8/types"
+	"github.com/jcmturner/gokrb5/v8/credentials"
 )
 
 type marshalKRBCred struct {
@@ -52,6 +53,37 @@ type KrbCredInfo struct {
 	SRealm    string              `asn1:"optional,explicit,ia5,tag:8"`
 	SName     types.PrincipalName `asn1:"optional,explicit,tag:9"`
 	CAddr     types.HostAddresses `asn1:"optional,explicit,tag:10"`
+}
+
+func (k *KRBCred) ToCredentials() ([]credentials.Credential, error) {
+	c := make([]credentials.Credential, len(k.DecryptedEncPart.TicketInfo))
+
+	for i, tinfo := range k.DecryptedEncPart.TicketInfo {
+		cred := credentials.Credential{
+			Client: credentials.Principal{
+				Realm: tinfo.PRealm,
+				PrincipalName: tinfo.PName,
+			},
+			Server: credentials.Principal{
+				Realm: tinfo.SRealm,
+				PrincipalName: tinfo.SName,
+			},
+			Key: tinfo.Key,
+			AuthTime: tinfo.AuthTime,
+			StartTime: tinfo.StartTime,
+			EndTime: tinfo.EndTime,
+			RenewTill: tinfo.RenewTill,
+			TicketFlags: tinfo.Flags,
+		}
+		ticket, err := k.Tickets[i].Marshal()
+		if err != nil {
+			return c, err
+		}
+		cred.Ticket = ticket
+		c[i] = cred
+	}
+
+	return c, nil
 }
 
 // Unmarshal bytes b into the KRBCred struct.

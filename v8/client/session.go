@@ -8,6 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jcmturner/gofork/encoding/asn1"
+
 	"github.com/jcmturner/gokrb5/v8/iana/nametype"
 	"github.com/jcmturner/gokrb5/v8/krberror"
 	"github.com/jcmturner/gokrb5/v8/messages"
@@ -62,9 +64,11 @@ func (s *sessions) get(realm string) (*session, bool) {
 type session struct {
 	realm                string
 	authTime             time.Time
+	startTime            time.Time
 	endTime              time.Time
 	renewTill            time.Time
 	tgt                  messages.Ticket
+	tgtFlags             asn1.BitString
 	sessionKey           types.EncryptionKey
 	sessionKeyExpiration time.Time
 	cancel               chan bool
@@ -75,6 +79,7 @@ type session struct {
 type jsonSession struct {
 	Realm                string
 	AuthTime             time.Time
+	StartTime            time.Time
 	EndTime              time.Time
 	RenewTill            time.Time
 	SessionKeyExpiration time.Time
@@ -91,9 +96,11 @@ func (cl *Client) addSession(tgt messages.Ticket, dep messages.EncKDCRepPart) {
 	s := &session{
 		realm:                realm,
 		authTime:             dep.AuthTime,
+		startTime:            dep.StartTime,
 		endTime:              dep.EndTime,
 		renewTill:            dep.RenewTill,
 		tgt:                  tgt,
+		tgtFlags:             dep.Flags,
 		sessionKey:           dep.Key,
 		sessionKeyExpiration: dep.KeyExpiration,
 	}
@@ -107,9 +114,11 @@ func (s *session) update(tgt messages.Ticket, dep messages.EncKDCRepPart) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	s.authTime = dep.AuthTime
+	s.startTime = dep.StartTime
 	s.endTime = dep.EndTime
 	s.renewTill = dep.RenewTill
 	s.tgt = tgt
+	s.tgtFlags = dep.Flags
 	s.sessionKey = dep.Key
 	s.sessionKeyExpiration = dep.KeyExpiration
 }
@@ -138,17 +147,17 @@ func (s *session) valid() bool {
 }
 
 // tgtDetails is a thread safe way to get the session's realm, TGT and session key values
-func (s *session) tgtDetails() (string, messages.Ticket, types.EncryptionKey) {
+func (s *session) tgtDetails() (string, messages.Ticket, asn1.BitString, types.EncryptionKey) {
 	s.mux.RLock()
 	defer s.mux.RUnlock()
-	return s.realm, s.tgt, s.sessionKey
+	return s.realm, s.tgt, s.tgtFlags, s.sessionKey
 }
 
 // timeDetails is a thread safe way to get the session's validity time values
-func (s *session) timeDetails() (string, time.Time, time.Time, time.Time, time.Time) {
+func (s *session) timeDetails() (string, time.Time, time.Time, time.Time, time.Time, time.Time) {
 	s.mux.RLock()
 	defer s.mux.RUnlock()
-	return s.realm, s.authTime, s.endTime, s.renewTill, s.sessionKeyExpiration
+	return s.realm, s.startTime, s.authTime, s.endTime, s.renewTill, s.sessionKeyExpiration
 }
 
 // JSON return information about the held sessions in a JSON format.
@@ -162,10 +171,11 @@ func (s *sessions) JSON() (string, error) {
 	}
 	sort.Strings(keys)
 	for _, k := range keys {
-		r, at, et, rt, kt := s.Entries[k].timeDetails()
+		r, st, at, et, rt, kt := s.Entries[k].timeDetails()
 		j := jsonSession{
 			Realm:                r,
 			AuthTime:             at,
+			StartTime:            st,
 			EndTime:              et,
 			RenewTill:            rt,
 			SessionKeyExpiration: kt,
@@ -215,7 +225,7 @@ func (cl *Client) enableAutoSessionRenewal(s *session) {
 
 // renewTGT renews the client's TGT session.
 func (cl *Client) renewTGT(s *session) error {
-	realm, tgt, skey := s.tgtDetails()
+	realm, tgt, _, skey := s.tgtDetails()
 	spn := types.PrincipalName{
 		NameType:   nametype.KRB_NT_SRV_INST,
 		NameString: []string{"krbtgt", realm},
@@ -264,7 +274,7 @@ func (cl *Client) ensureValidSession(realm string) error {
 }
 
 // sessionTGTDetails is a thread safe way to get the TGT and session key values for a realm
-func (cl *Client) sessionTGT(realm string) (tgt messages.Ticket, sessionKey types.EncryptionKey, err error) {
+func (cl *Client) sessionTGT(realm string) (tgt messages.Ticket, flags asn1.BitString, sessionKey types.EncryptionKey, err error) {
 	err = cl.ensureValidSession(realm)
 	if err != nil {
 		return
@@ -274,18 +284,18 @@ func (cl *Client) sessionTGT(realm string) (tgt messages.Ticket, sessionKey type
 		err = fmt.Errorf("could not find TGT session for %s", realm)
 		return
 	}
-	_, tgt, sessionKey = s.tgtDetails()
+	_, tgt, flags, sessionKey = s.tgtDetails()
 	return
 }
 
 // sessionTimes provides the timing information with regards to a session for the realm specified.
-func (cl *Client) sessionTimes(realm string) (authTime, endTime, renewTime, sessionExp time.Time, err error) {
+func (cl *Client) sessionTimes(realm string) (authTime, startTime, endTime, renewTime, sessionExp time.Time, err error) {
 	s, ok := cl.sessions.get(realm)
 	if !ok {
 		err = fmt.Errorf("could not find TGT session for %s", realm)
 		return
 	}
-	_, authTime, endTime, renewTime, sessionExp = s.timeDetails()
+	_, authTime, startTime, endTime, renewTime, sessionExp = s.timeDetails()
 	return
 }
 

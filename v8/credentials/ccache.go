@@ -1,10 +1,10 @@
 package credentials
 
 import (
-	"fmt"
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"strings"
 	"time"
@@ -72,15 +72,15 @@ func LoadCCache(cpath string) (*CCache, error) {
 	return c, err
 }
 
-func CCacheFromCredentials(creds []Credential) (*CCache) {
+func CCacheFromCredentials(creds []Credential) *CCache {
 	credentials := make([]*Credential, len(creds))
 	for i, cred := range creds {
 		credentials[i] = &cred
 	}
 	c := CCache{
-		Version: 4,
+		Version:          4,
 		DefaultPrincipal: creds[0].Client,
-		Credentials: credentials,
+		Credentials:      credentials,
 	}
 
 	return &c
@@ -136,7 +136,7 @@ func (c *CCache) Marshal() ([]byte, error) {
 
 	var endian binary.ByteOrder
 	endian = c.getEndianess()
-	if (c.Version == 4) {
+	if c.Version == 4 {
 		header, err := c.writeHeader(endian)
 		if err != nil {
 			return b, err
@@ -191,7 +191,7 @@ func (c *CCache) writeHeader(e binary.ByteOrder) ([]byte, error) {
 		b = append(b, writeUint16(field.length, e)...)
 		b = append(b, field.value...)
 	}
-	if uint16(len(b)) - 2 != c.Header.length {
+	if uint16(len(b))-2 != c.Header.length {
 		return b, fmt.Errorf("Header length and real length differ %d != %d", len(b), c.Header.length)
 	}
 	return b, nil
@@ -224,7 +224,7 @@ func (c *CCache) writePrincipal(p Principal, e binary.ByteOrder) ([]byte, error)
 	}
 	count := uint32(len(p.PrincipalName.NameString))
 	if c.Version == 1 {
-		count += 1;
+		count += 1
 	}
 	b = append(b, writeUint32(count, e)...)
 
@@ -431,13 +431,13 @@ func readTimestamp(b []byte, p *int, e *binary.ByteOrder) time.Time {
 	return time.Unix(int64(readInt32(b, p, e)), 0)
 }
 
-func writeUint16(i uint16, e binary.ByteOrder) ([]byte) {
+func writeUint16(i uint16, e binary.ByteOrder) []byte {
 	b := make([]byte, 2)
 	e.PutUint16(b, i)
 	return b
 }
 
-func writeUint32(i uint32, e binary.ByteOrder) ([]byte) {
+func writeUint32(i uint32, e binary.ByteOrder) []byte {
 	b := make([]byte, 4)
 	e.PutUint32(b, i)
 	return b

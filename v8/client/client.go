@@ -258,25 +258,25 @@ func (cl *Client) GetCCache() (*credentials.CCache, error) {
 	}
 	tgtCred := credentials.Credential{
 		Client: credentials.Principal{
-			Realm: cl.Credentials.Realm(),
+			Realm:         cl.Credentials.Realm(),
 			PrincipalName: cl.Credentials.CName(),
 		},
 		Server: credentials.Principal{
-			Realm: tgt.Realm,
+			Realm:         tgt.Realm,
 			PrincipalName: tgt.SName,
 		},
-		Key: skey,
-		AuthTime: authTime,
-		StartTime: startTime,
-		EndTime: endTime,
-		RenewTill: renewTime,
+		Key:         skey,
+		AuthTime:    authTime,
+		StartTime:   startTime,
+		EndTime:     endTime,
+		RenewTill:   renewTime,
 		TicketFlags: flags,
-		Ticket: tgtMar,
+		Ticket:      tgtMar,
 	}
 	creds := []credentials.Credential{tgtCred}
 	ccache := credentials.CCacheFromCredentials(creds)
 	ccache.DefaultPrincipal = credentials.Principal{
-		Realm: cl.Credentials.Realm(),
+		Realm:         cl.Credentials.Realm(),
 		PrincipalName: cl.Credentials.CName(),
 	}
 	return ccache, nil

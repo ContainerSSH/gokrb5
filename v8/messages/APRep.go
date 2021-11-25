@@ -1,21 +1,21 @@
 package messages
 
 import (
-	"fmt"
-	"time"
 	"crypto/rand"
+	"fmt"
 	"math"
 	"math/big"
+	"time"
 
 	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/jcmturner/gokrb5/v8/asn1tools"
+	"github.com/jcmturner/gokrb5/v8/crypto"
 	"github.com/jcmturner/gokrb5/v8/iana"
 	"github.com/jcmturner/gokrb5/v8/iana/asnAppTag"
-	"github.com/jcmturner/gokrb5/v8/iana/msgtype"
 	"github.com/jcmturner/gokrb5/v8/iana/keyusage"
+	"github.com/jcmturner/gokrb5/v8/iana/msgtype"
 	"github.com/jcmturner/gokrb5/v8/krberror"
 	"github.com/jcmturner/gokrb5/v8/types"
-	"github.com/jcmturner/gokrb5/v8/crypto"
 )
 
 // APRep implements RFC 4120 KRB_AP_REP: https://tools.ietf.org/html/rfc4120#section-5.5.2.
@@ -97,9 +97,9 @@ func (a *APRep) DecryptEncryptedPart(sessionKey types.EncryptionKey) (EncAPRepPa
 
 }
 
-func EncryptPart(tkt Ticket, sessionKey types.EncryptionKey, part EncAPRepPart) (types.EncryptedData, error){
+func EncryptPart(tkt Ticket, sessionKey types.EncryptionKey, part EncAPRepPart) (types.EncryptedData, error) {
 	var ed types.EncryptedData
-	m, err:= part.Marshal()
+	m, err := part.Marshal()
 	if err != nil {
 		return types.EncryptedData{}, krberror.Errorf(err, krberror.EncodingError, "marshaling error of EncryptedData form of APRep")
 	}
@@ -129,7 +129,7 @@ func NewAPRep(tkt Ticket, authenticator types.Authenticator) (APRep, error) {
 	}
 
 	a := APRep{
-		PVNO: iana.PVNO,
+		PVNO:    iana.PVNO,
 		MsgType: msgtype.KRB_AP_REP,
 		EncPart: ed,
 	}

@@ -5,13 +5,13 @@ import (
 	"time"
 
 	"github.com/jcmturner/gofork/encoding/asn1"
+	"github.com/jcmturner/gokrb5/v8/credentials"
 	"github.com/jcmturner/gokrb5/v8/crypto"
 	"github.com/jcmturner/gokrb5/v8/iana/asnAppTag"
 	"github.com/jcmturner/gokrb5/v8/iana/keyusage"
 	"github.com/jcmturner/gokrb5/v8/iana/msgtype"
 	"github.com/jcmturner/gokrb5/v8/krberror"
 	"github.com/jcmturner/gokrb5/v8/types"
-	"github.com/jcmturner/gokrb5/v8/credentials"
 )
 
 type marshalKRBCred struct {
@@ -61,18 +61,18 @@ func (k *KRBCred) ToCredentials() ([]credentials.Credential, error) {
 	for i, tinfo := range k.DecryptedEncPart.TicketInfo {
 		cred := credentials.Credential{
 			Client: credentials.Principal{
-				Realm: tinfo.PRealm,
+				Realm:         tinfo.PRealm,
 				PrincipalName: tinfo.PName,
 			},
 			Server: credentials.Principal{
-				Realm: tinfo.SRealm,
+				Realm:         tinfo.SRealm,
 				PrincipalName: tinfo.SName,
 			},
-			Key: tinfo.Key,
-			AuthTime: tinfo.AuthTime,
-			StartTime: tinfo.StartTime,
-			EndTime: tinfo.EndTime,
-			RenewTill: tinfo.RenewTill,
+			Key:         tinfo.Key,
+			AuthTime:    tinfo.AuthTime,
+			StartTime:   tinfo.StartTime,
+			EndTime:     tinfo.EndTime,
+			RenewTill:   tinfo.RenewTill,
 			TicketFlags: tinfo.Flags,
 		}
 		ticket, err := k.Tickets[i].Marshal()

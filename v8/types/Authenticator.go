@@ -3,11 +3,11 @@ package types
 
 import (
 	"crypto/rand"
+	"encoding/binary"
 	"fmt"
 	"math"
 	"math/big"
 	"time"
-	"encoding/binary"
 
 	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/jcmturner/gokrb5/v8/asn1tools"
@@ -38,17 +38,17 @@ type Authenticator struct {
 	SubKey            EncryptionKey     `asn1:"explicit,optional,tag:6"`
 	SeqNumber         int64             `asn1:"explicit,optional,tag:7"`
 	AuthorizationData AuthorizationData `asn1:"explicit,optional,tag:8"`
-	Delegation        CredDelegation     `asn1:"optional"`
+	Delegation        CredDelegation    `asn1:"optional"`
 }
 
 // RFC1964 Section 1.1
 type CredDelegation struct {
-	BndLength    uint32
-	Bnd          []byte
-	Flags        uint32
-	DelegOption  uint16
-	DelegLength  uint16
-	Deleg        []byte
+	BndLength   uint32
+	Bnd         []byte
+	Flags       uint32
+	DelegOption uint16
+	DelegLength uint16
+	Deleg       []byte
 }
 
 // NewAuthenticator creates a new Authenticator.
@@ -123,7 +123,7 @@ func (c *CredDelegation) Unmarshal(b []byte) error {
 
 	c.DelegOption = binary.LittleEndian.Uint16(b[24:26])
 	c.DelegLength = binary.LittleEndian.Uint16(b[26:28])
-	c.Deleg = b[28:c.DelegLength+28]
+	c.Deleg = b[28 : c.DelegLength+28]
 
 	return nil
 }

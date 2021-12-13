@@ -13,6 +13,7 @@ import (
 	"github.com/jcmturner/gokrb5/v8/asn1tools"
 	"github.com/jcmturner/gokrb5/v8/iana"
 	"github.com/jcmturner/gokrb5/v8/iana/asnAppTag"
+	"github.com/jcmturner/gokrb5/v8/iana/chksumtype"
 )
 
 // RFC 4121 Section 4.1.1.1
@@ -38,7 +39,6 @@ type Authenticator struct {
 	SubKey            EncryptionKey     `asn1:"explicit,optional,tag:6"`
 	SeqNumber         int64             `asn1:"explicit,optional,tag:7"`
 	AuthorizationData AuthorizationData `asn1:"explicit,optional,tag:8"`
-	Delegation        CredDelegation    `asn1:"optional"`
 }
 
 // RFC1964 Section 1.1
@@ -86,16 +86,24 @@ func (a *Authenticator) GenerateSeqNumberAndSubKey(keyType int32, keySize int) e
 	return nil
 }
 
-func (a *Authenticator) HasCredDelegation() bool {
-	return a.Delegation.Flags&Flag_Deleg != 0
+func (a *Authenticator) GetCredDelegation() (*CredDelegation, error) {
+	if a.Cksum.CksumType != chksumtype.GSSAPI {
+		return nil, fmt.Errorf("Authenticator has no credential delegation")
+	}
+	var del CredDelegation
+	err := del.Unmarshal(a.Cksum.Checksum)
+	if err != nil {
+		return nil, fmt.Errorf("Error unmarshalling KRB_CRED packet in Authenticator")
+	}
+	if del.Flags & Flag_Deleg != 0 {
+		return nil, nil
+	}
+	return nil, nil
 }
 
 // Unmarshal bytes into the Authenticator.
 func (a *Authenticator) Unmarshal(b []byte) error {
 	_, err := asn1.UnmarshalWithParams(b, a, fmt.Sprintf("application,explicit,tag:%v", asnAppTag.Authenticator))
-	if a.Cksum.CksumType == 0x8003 {
-		a.Delegation.Unmarshal(a.Cksum.Checksum)
-	}
 	return err
 }
 
@@ -107,6 +115,10 @@ func (a *Authenticator) Marshal() ([]byte, error) {
 	}
 	b = asn1tools.AddASNAppTag(b, asnAppTag.Authenticator)
 	return b, nil
+}
+
+func (c *CredDelegation) HasDelegation() bool {
+	return c.Flags & Flag_Deleg != 0
 }
 
 func (c *CredDelegation) Unmarshal(b []byte) error {

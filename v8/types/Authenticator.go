@@ -124,7 +124,7 @@ func (c *CredDelegation) HasDelegation() bool {
 func (c *CredDelegation) Unmarshal(b []byte) error {
 	c.BndLength = binary.LittleEndian.Uint32(b[0:4])
 	if c.BndLength != 16 {
-		return fmt.Errorf("Invalid BndLength")
+		return fmt.Errorf("Invalid BndLength of %d", c.BndLength)
 	}
 	c.Bnd = b[4:20]
 	c.Flags = binary.LittleEndian.Uint32(b[20:24])

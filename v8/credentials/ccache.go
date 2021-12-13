@@ -187,7 +187,6 @@ func (c *CCache) writeHeader(e binary.ByteOrder) ([]byte, error) {
 	b = append(b, i...)
 	for _, field := range c.Header.fields {
 		b = append(b, writeUint16(field.tag, e)...)
-		// assert field.length == len(value)
 		b = append(b, writeUint16(field.length, e)...)
 		b = append(b, field.value...)
 	}

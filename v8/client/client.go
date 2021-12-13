@@ -250,11 +250,11 @@ func (cl *Client) GetCCache() (*credentials.CCache, error) {
 	}
 	authTime, startTime, endTime, renewTime, _, err := cl.sessionTimes(cl.Credentials.Realm())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get session times while getting cache (%w)", err)
 	}
 	tgtMar, err := tgt.Marshal()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to marshal tft while getting cache (%w)", err)
 	}
 	tgtCred := credentials.Credential{
 		Client: credentials.Principal{

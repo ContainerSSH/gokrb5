@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"github.com/jcmturner/gofork/encoding/asn1"
-	"github.com/jcmturner/gokrb5/v8/asn1tools"
-	"github.com/jcmturner/gokrb5/v8/iana"
-	"github.com/jcmturner/gokrb5/v8/iana/asnAppTag"
-	"github.com/jcmturner/gokrb5/v8/iana/chksumtype"
+	"github.com/containerssh/gokrb5/v8/asn1tools"
+	"github.com/containerssh/gokrb5/v8/iana"
+	"github.com/containerssh/gokrb5/v8/iana/asnAppTag"
+	"github.com/containerssh/gokrb5/v8/iana/chksumtype"
 )
 
 // RFC 4121 Section 4.1.1.1

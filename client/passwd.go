@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"gopkg.in/jcmturner/gokrb5.v7/kadmin"
-	"gopkg.in/jcmturner/gokrb5.v7/messages"
+	"gopkg.in/containerssh/gokrb5.v7/kadmin"
+	"gopkg.in/containerssh/gokrb5.v7/messages"
 )
 
 // Kpasswd server response codes.

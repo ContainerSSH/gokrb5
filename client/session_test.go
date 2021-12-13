@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/jcmturner/gokrb5.v7/config"
-	"gopkg.in/jcmturner/gokrb5.v7/iana/etypeID"
-	"gopkg.in/jcmturner/gokrb5.v7/keytab"
-	"gopkg.in/jcmturner/gokrb5.v7/test"
-	"gopkg.in/jcmturner/gokrb5.v7/test/testdata"
+	"gopkg.in/containerssh/gokrb5.v7/config"
+	"gopkg.in/containerssh/gokrb5.v7/iana/etypeID"
+	"gopkg.in/containerssh/gokrb5.v7/keytab"
+	"gopkg.in/containerssh/gokrb5.v7/test"
+	"gopkg.in/containerssh/gokrb5.v7/test/testdata"
 )
 
 func TestMultiThreadedClientSession(t *testing.T) {

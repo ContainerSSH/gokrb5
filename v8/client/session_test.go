@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jcmturner/gokrb5/v8/config"
-	"github.com/jcmturner/gokrb5/v8/iana/etypeID"
-	"github.com/jcmturner/gokrb5/v8/keytab"
-	"github.com/jcmturner/gokrb5/v8/test"
-	"github.com/jcmturner/gokrb5/v8/test/testdata"
+	"github.com/containerssh/gokrb5/v8/config"
+	"github.com/containerssh/gokrb5/v8/iana/etypeID"
+	"github.com/containerssh/gokrb5/v8/keytab"
+	"github.com/containerssh/gokrb5/v8/test"
+	"github.com/containerssh/gokrb5/v8/test/testdata"
 	"github.com/stretchr/testify/assert"
 )
 

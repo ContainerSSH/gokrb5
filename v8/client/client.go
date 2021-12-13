@@ -9,16 +9,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jcmturner/gokrb5/v8/config"
-	"github.com/jcmturner/gokrb5/v8/credentials"
-	"github.com/jcmturner/gokrb5/v8/crypto"
-	"github.com/jcmturner/gokrb5/v8/crypto/etype"
-	"github.com/jcmturner/gokrb5/v8/iana/errorcode"
-	"github.com/jcmturner/gokrb5/v8/iana/nametype"
-	"github.com/jcmturner/gokrb5/v8/keytab"
-	"github.com/jcmturner/gokrb5/v8/krberror"
-	"github.com/jcmturner/gokrb5/v8/messages"
-	"github.com/jcmturner/gokrb5/v8/types"
+	"github.com/containerssh/gokrb5/v8/config"
+	"github.com/containerssh/gokrb5/v8/credentials"
+	"github.com/containerssh/gokrb5/v8/crypto"
+	"github.com/containerssh/gokrb5/v8/crypto/etype"
+	"github.com/containerssh/gokrb5/v8/iana/errorcode"
+	"github.com/containerssh/gokrb5/v8/iana/nametype"
+	"github.com/containerssh/gokrb5/v8/keytab"
+	"github.com/containerssh/gokrb5/v8/krberror"
+	"github.com/containerssh/gokrb5/v8/messages"
+	"github.com/containerssh/gokrb5/v8/types"
 )
 
 // Client side configuration and state.

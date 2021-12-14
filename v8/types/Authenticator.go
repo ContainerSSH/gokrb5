@@ -95,10 +95,10 @@ func (a *Authenticator) GetCredDelegation() (*CredDelegation, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error unmarshalling KRB_CRED packet in Authenticator")
 	}
-	if del.Flags & Flag_Deleg != 0 {
+	if del.Flags & Flag_Deleg == 0 {
 		return nil, nil
 	}
-	return nil, nil
+	return &del, nil
 }
 
 // Unmarshal bytes into the Authenticator.

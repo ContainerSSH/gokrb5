@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/containerssh/gokrb5/v8/client"
 	"github.com/containerssh/gokrb5/v8/gssapi"
 	"github.com/containerssh/gokrb5/v8/messages"
 	"github.com/containerssh/gokrb5/v8/service"
 	"github.com/containerssh/gokrb5/v8/types"
+	"github.com/jcmturner/gofork/encoding/asn1"
 )
 
 // https://msdn.microsoft.com/en-us/library/ms995330.aspx

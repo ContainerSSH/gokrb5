@@ -16,13 +16,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/jcmturner/goidentity.v3"
 	"gopkg.in/containerssh/gokrb5.v7/client"
 	"gopkg.in/containerssh/gokrb5.v7/config"
 	"gopkg.in/containerssh/gokrb5.v7/keytab"
 	"gopkg.in/containerssh/gokrb5.v7/service"
 	"gopkg.in/containerssh/gokrb5.v7/test"
 	"gopkg.in/containerssh/gokrb5.v7/test/testdata"
+	"gopkg.in/jcmturner/goidentity.v3"
 )
 
 func TestClient_SetSPNEGOHeader(t *testing.T) {

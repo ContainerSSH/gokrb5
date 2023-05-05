@@ -9,11 +9,11 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/containerssh/gokrb5/v8/asn1tools"
 	"github.com/containerssh/gokrb5/v8/iana"
 	"github.com/containerssh/gokrb5/v8/iana/asnAppTag"
 	"github.com/containerssh/gokrb5/v8/iana/chksumtype"
+	"github.com/jcmturner/gofork/encoding/asn1"
 )
 
 // RFC 4121 Section 4.1.1.1
@@ -95,7 +95,7 @@ func (a *Authenticator) GetCredDelegation() (*CredDelegation, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error unmarshalling KRB_CRED packet in Authenticator")
 	}
-	if del.Flags & Flag_Deleg == 0 {
+	if del.Flags&Flag_Deleg == 0 {
 		return nil, nil
 	}
 	return &del, nil
@@ -118,7 +118,7 @@ func (a *Authenticator) Marshal() ([]byte, error) {
 }
 
 func (c *CredDelegation) HasDelegation() bool {
-	return c.Flags & Flag_Deleg != 0
+	return c.Flags&Flag_Deleg != 0
 }
 
 func (c *CredDelegation) Unmarshal(b []byte) error {

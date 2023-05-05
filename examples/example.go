@@ -1,3 +1,4 @@
+//go:build examples
 // +build examples
 
 // Package examples provides simple examples of gokrb5 use.
@@ -12,13 +13,13 @@ import (
 	"net/http/httptest"
 	"os"
 
-	"gopkg.in/jcmturner/goidentity.v3"
 	"gopkg.in/containerssh/gokrb5.v7/client"
 	"gopkg.in/containerssh/gokrb5.v7/config"
 	"gopkg.in/containerssh/gokrb5.v7/keytab"
 	"gopkg.in/containerssh/gokrb5.v7/service"
 	"gopkg.in/containerssh/gokrb5.v7/spnego"
 	"gopkg.in/containerssh/gokrb5.v7/test/testdata"
+	"gopkg.in/jcmturner/goidentity.v3"
 )
 
 func main() {

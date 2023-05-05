@@ -1,3 +1,4 @@
+//go:build examples
 // +build examples
 
 package main
@@ -10,12 +11,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/sessions"
-	"github.com/jcmturner/goidentity/v6"
 	"github.com/containerssh/gokrb5/v8/keytab"
 	"github.com/containerssh/gokrb5/v8/service"
 	"github.com/containerssh/gokrb5/v8/spnego"
 	"github.com/containerssh/gokrb5/v8/test/testdata"
+	"github.com/gorilla/sessions"
+	"github.com/jcmturner/goidentity/v6"
 )
 
 const (

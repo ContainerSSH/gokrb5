@@ -5,7 +5,6 @@ import (
 	"math"
 	"testing"
 
-	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/containerssh/gokrb5/v8/client"
 	"github.com/containerssh/gokrb5/v8/credentials"
 	"github.com/containerssh/gokrb5/v8/gssapi"
@@ -14,6 +13,7 @@ import (
 	"github.com/containerssh/gokrb5/v8/messages"
 	"github.com/containerssh/gokrb5/v8/test/testdata"
 	"github.com/containerssh/gokrb5/v8/types"
+	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/stretchr/testify/assert"
 )
 

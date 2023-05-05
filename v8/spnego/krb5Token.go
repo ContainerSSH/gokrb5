@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jcmturner/gofork/encoding/asn1"
 	"github.com/containerssh/gokrb5/v8/asn1tools"
 	"github.com/containerssh/gokrb5/v8/client"
 	"github.com/containerssh/gokrb5/v8/credentials"
@@ -18,6 +17,7 @@ import (
 	"github.com/containerssh/gokrb5/v8/messages"
 	"github.com/containerssh/gokrb5/v8/service"
 	"github.com/containerssh/gokrb5/v8/types"
+	"github.com/jcmturner/gofork/encoding/asn1"
 )
 
 // GSSAPI KRB5 MechToken IDs.

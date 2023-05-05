@@ -295,7 +295,7 @@ func (cl *Client) sessionTimes(realm string) (authTime, startTime, endTime, rene
 		err = fmt.Errorf("could not find TGT session for %s", realm)
 		return
 	}
-	_, authTime, startTime, endTime, renewTime, sessionExp = s.timeDetails()
+	_, startTime, authTime, endTime, renewTime, sessionExp = s.timeDetails()
 	return
 }
 
